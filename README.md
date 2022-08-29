@@ -1,2 +1,5 @@
 # digital-wallet
-C++ backend wallet using crow c++ API
+C++ backend wallet
+
+## Integration
+using crow c++ API https://github.com/ipkn/crow.git
