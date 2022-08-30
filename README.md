@@ -8,4 +8,4 @@ sudo apt install libc6-dev g++ libboost-all-dev
 g++ --std=c++17 -pthread main.cpp -lrt
 
 ## Integration
-using crow c++ API https://github.com/ipkn/crow.git
+using crow c++ API (https://github.com/CrowCpp/Crow)
