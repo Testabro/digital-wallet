@@ -7,5 +7,5 @@ sudo apt install libc6-dev g++ libboost-all-dev
 ## Build
 g++ --std=c++17 -pthread main.cpp -lrt
 
-## Integration
+## Interfaces
 using crow c++ API (https://github.com/CrowCpp/Crow)
