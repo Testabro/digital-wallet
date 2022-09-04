@@ -2,7 +2,7 @@
 C++ backend wallet
 
 ## Prereqs
-sudo apt install libc6-dev g++ libboost-all-dev
+sudo apt install libc6-dev g++ libboost-all-dev cmake
 
 ## Build
 g++ --std=c++17 -pthread ConcreteServiceState.cpp Service.cpp main.cpp  -lrt
