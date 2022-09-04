@@ -1,5 +1,5 @@
 # digital-wallet  
-C++ backend wallet
+C++ backend wallet service
 
 ## Prereqs  
 ```
