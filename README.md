@@ -5,7 +5,7 @@ C++ backend wallet
   $ sudo apt install libc6-dev g++ libboost-all-dev cmake
 
 ## Build
-  $ mkdir build
+  $ mkdir build  
   $ cd build
   $ cmake ..
   $ make
