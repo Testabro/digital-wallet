@@ -66,7 +66,7 @@ void ServiceApply::toggle(Service* service) {
     assert(service->_status.ok());    
     int accountBalanceA = std::stoi(balance);
 
-    service->_status = service->_accountDB->Get(service->_read_options, eventA.account, &balance);
+    service->_status = service->_accountDB->Get(service->_read_options, eventB.account, &balance);
     assert(service->_status.ok());    
     int accountBalanceB = std::stoi(balance);
 
