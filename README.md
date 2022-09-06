@@ -26,4 +26,5 @@ g++ --std=c++17 -pthread ConcreteServiceState.cpp Service.cpp main.cpp -lrt
 ```
 ## Integrations  
 using crow c++ API (https://github.com/CrowCpp/Crow)  
-using boost.io  
+using boost.io for mmapped command and event files
+using rocksdb for key-value store of account and balences
