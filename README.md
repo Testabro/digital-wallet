@@ -27,10 +27,7 @@ make
 ```
 
 ### Alternative Build  
-```
-g++ --std=c++17 -pthread -o wallet-service ConcreteServiceState.cpp Service.cpp main.cpp -lrt  
-```
-Using the RockDB integration
+Using the RockDB integration  
 ```
 g++ --std=c++17 -o wallet-service ../src/ConcreteServiceState.cpp ../src/Service.cpp ../src/main.cpp -L. -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl
 ```
