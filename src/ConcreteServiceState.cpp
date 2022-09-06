@@ -23,8 +23,11 @@ ServiceState& ServiceListen::getInstance() {
 void ServiceValidate::toggle(Service* service) {
     std::cout << "Validate toggle" << std::endl; // DEBUG output
     Command command = service->_command_queue->front();
-    std::string balance = service->_state_map->find(command.getAccount1())->second;
-    if (command.getAction() == "TRANSFER" && balance >= command.getAmount()) {
+    std::string balance;
+
+    service->_status = service->_accountDB->Get(service->_read_options, "account1", &balance);
+    assert(service->_status.ok());
+    if (command.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(command.getAmount())) {
         // validate -> apply
         std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
         service->setState(ServiceApply::getInstance());
@@ -58,14 +61,23 @@ void ServiceApply::toggle(Service* service) {
     eventB.amount = command.getAmount();
 
     //Update State
-    int accountBalanceA = std::stoi(service->_state_map->find(eventA.account)->second);
-    int accountBalanceB = std::stoi(service->_state_map->find(eventB.account)->second);
+    std::string balance;
+    service->_status = service->_accountDB->Get(service->_read_options, eventA.account, &balance);
+    assert(service->_status.ok());    
+    int accountBalanceA = std::stoi(balance);
+
+    service->_status = service->_accountDB->Get(service->_read_options, eventA.account, &balance);
+    assert(service->_status.ok());    
+    int accountBalanceB = std::stoi(balance);
 
     int balance1 = accountBalanceA - std::stoi(command.getAmount());
     int balance2 = accountBalanceB + std::stoi(command.getAmount());
 
-    service->_state_map->find(eventA.account)->second = std::to_string(balance1);
-    service->_state_map->find(eventB.account)->second = std::to_string(balance2);
+    service->_status = service->_accountDB->Put(rocksdb::WriteOptions(), eventA.account, std::to_string(balance1));
+    assert(service->_status.ok());
+
+    service->_status = service->_accountDB->Put(rocksdb::WriteOptions(), eventB.account, std::to_string(balance2));
+    assert(service->_status.ok());
 
     //Add to event log
     service->_event_queue->push(eventA);

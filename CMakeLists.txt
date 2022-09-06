@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+# set RocksDB_LIBRARY; needs to be the product of where the rocksdb static lib was put
+set(RocksDB_LIBRARY .)
+
+set(LDFLAGS -L${RocksDB_LIBRARY} -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl)
+
 # Setup compiler
 SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
 
@@ -19,13 +24,16 @@ IF(Boost_FOUND)
   LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 ENDIF(Boost_FOUND)
 
-SET(USED_LIBS ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY})
+# add rocksdb static library location
+
+# combine and set all required libraries
+SET(USED_LIBS ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${Boost_REGEX_LIBRARY} ${LDFLAGS})
 
 # set the project name
 project(wallet-service)
 
-# add compile options
-add_compile_options(-pthread)
+# add link options
+# add_link_options(-L. -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl)
 
 # add the executable
 add_executable(wallet-service src/ConcreteServiceState.cpp src/Service.cpp src/main.cpp)
