@@ -81,7 +81,7 @@ void ServiceApply::toggle(Service* service) {
 
     //Add to event log
     service->_event_queue->push(eventA);
-    service->_event_queue->push(eventA);
+    service->_event_queue->push(eventB);
 
     // apply -> listen
     service->setState(ServiceListen::getInstance());
