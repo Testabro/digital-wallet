@@ -14,7 +14,7 @@ class Command {
         std::string getAccount1() { return _account1; };
         std::string getAccount2() { return _account2; };
         std::string getAmount() { return _amount; };
-        // Generate random 128-bit id; TODO create id manager process and delagate this
+        // Generate random id; TODO create id manager process and delagate this
         std::string generateID() {
             std::time_t now = std::time(0);
             boost::random::mt19937 gen{static_cast<std::uint32_t>(now)};
