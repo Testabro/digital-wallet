@@ -80,8 +80,6 @@ void ServiceApply::toggle(Service* service) {
     assert(service->_status.ok());
 
     //Add to event log
-    // service->_event_queue->push(eventA);
-    // service->_event_queue->push(eventB);
     {
         std::ofstream ofs("/tmp/event-log.bin");
         boost::archive::binary_oarchive oa(ofs);

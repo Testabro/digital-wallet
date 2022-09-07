@@ -50,9 +50,6 @@ int main()
   
     std::queue<Command> command_queue;
     
-    // std::queue<Event> event_queue;
-
-
     //Init Service
     Service service = Service(command_queue);
 
@@ -101,14 +98,6 @@ int main()
 
         CROW_ROUTE(app, "/api/1.0/wallet/events")([](){
         std::ostringstream os;
-        // std::queue<Event> q_copy = event_queue;
-        // while (!q_copy.empty())
-        // {
-        //     Event front = q_copy.front();
-        //     os << front.toString() << std::endl;
-        //     q_copy.pop();
-        // }
-        
         //TEST open event log through mem mapped file
         Event new_event1 = Event();
         Event new_event2 = Event();
