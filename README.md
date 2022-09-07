@@ -29,7 +29,7 @@ make
 ### Alternative Build  
 Using the RockDB integration  
 ```
-g++ --std=c++17 -o wallet-service ../src/ConcreteServiceState.cpp ../src/Service.cpp ../src/main.cpp -L. -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl
+ g++ --std=c++17 -o wallet-service ../src/ConcreteServiceState.cpp ../src/Service.cpp ../src/main.cpp -L. -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl -lboost_iostreams
 ```
 ## Integrations  
 using crow c++ API (https://github.com/CrowCpp/Crow)  
