@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 # set RocksDB_LIBRARY; needs to be the product of where the rocksdb static lib was put
 set(RocksDB_LIBRARY .)
 
-set(LDFLAGS -L${RocksDB_LIBRARY} -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl)
+set(LDFLAGS -L${RocksDB_LIBRARY} -lrocksdb -lsnappy -lpthread -lbz2 -lz -lrt -ldl -lboost_serialization)
 
 # Setup compiler
 SET(CMAKE_CXX_COMPILER "/usr/bin/g++")
@@ -18,7 +18,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # add boost libraries
 SET(Boost_USE_STATIC_LIBS OFF)
 SET(Boost_USE_MULTITHREAD ON)
-FIND_PACKAGE(Boost 1.42.0 REQUIRED COMPONENTS system thread regex)
+FIND_PACKAGE(Boost 1.42.0 REQUIRED system serialization thread regex)
 IF(Boost_FOUND)
   INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
   LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
