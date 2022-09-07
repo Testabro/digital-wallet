@@ -3,11 +3,11 @@
 #include "Service.h"
 #include "ConcreteServiceState.h"
 
-Service::Service(std::queue<Command>& command_queue, std::queue<Event>& event_queue)
+Service::Service(std::queue<Command>& command_queue)
 {
 	std::cout << "Create service" << std::endl; // DEBUG output
 	_command_queue = &command_queue;
-	_event_queue = &event_queue;
+	// _event_queue = &event_queue; REMOVE
 
 	// Service is listening initially
 	currentState = &ServiceListen::getInstance();

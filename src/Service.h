@@ -15,7 +15,7 @@ class Service {
 
     public:
         Service();
-        Service(std::queue<Command>& command_queue, std::queue<Event>& event_queue);
+        Service(std::queue<Command>& command_queue);
         inline ServiceState* getCurrentState() const { return currentState; }
         void toggle();
         // This will get called by the current state
@@ -25,9 +25,9 @@ class Service {
         rocksdb::Status _status;
         rocksdb::ReadOptions _read_options;
         rocksdb::Options _options; 
-        std::queue<Event> *_event_queue;
+        // std::queue<Event> *_event_queue;
         std::queue<Command> *_command_queue;                
-        ServiceState *currentState;
+        ServiceState *currentState;        
     private:
         void init();
 };
