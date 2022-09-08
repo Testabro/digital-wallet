@@ -9,7 +9,7 @@ sudo apt-get install libc6-dev g++ libboost-all-dev cmake
 Rocksdb Integration  
 see install guide for reference https://github.com/facebook/rocksdb/blob/main/INSTALL.md  
 ```
-sudo apt-get install libsnappy-dev sudo apt-get install libbz2-dev
+sudo apt-get install libsnappy-dev libbz2-dev
 ```  
 
 ## Build  
