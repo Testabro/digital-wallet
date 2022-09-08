@@ -2,8 +2,8 @@
 #include <queue>          // std::queue
 #include <sstream>        // osstringstream
 #include <assert.h>         //for test case
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 #include "Service.h"
 #include "../lib/crowapi/crow_all.h"
@@ -101,9 +101,9 @@ int main()
         //TEST open event log through mem mapped file
         Event new_event1 = Event();
         Event new_event2 = Event();
-        std::ifstream ifs("/tmp/event-log.bin");
+        std::ifstream ifs("/tmp/event-log.txt");
         {
-            boost::archive::binary_iarchive ia(ifs);
+            boost::archive::text_iarchive ia(ifs);
             ia >> new_event1 >> new_event2;
         }
         os << new_event1.toString() << std::endl << new_event2.toString();

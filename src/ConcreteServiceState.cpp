@@ -1,6 +1,8 @@
 #include "ConcreteServiceState.h"
 #include <iostream>       // std::cout
 #include <string>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 void ServiceListen::toggle(Service* service) {
     std::cout << "Listen toggle" << std::endl; // DEBUG output
@@ -81,8 +83,8 @@ void ServiceApply::toggle(Service* service) {
 
     //Add to event log
     {
-        std::ofstream ofs("/tmp/event-log.bin");
-        boost::archive::binary_oarchive oa(ofs);
+        std::ofstream ofs("/tmp/event-log.txt");
+        boost::archive::text_oarchive oa(ofs);
         oa << eventA << eventB;
     }
 
