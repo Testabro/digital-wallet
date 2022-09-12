@@ -3,10 +3,8 @@
 #include "Service.h"
 #include "ConcreteServiceState.h"
 
-Service::Service(std::queue<Command>& command_queue)
-{
+Service::Service() {
 	std::cout << "Create service" << std::endl; // DEBUG output
-	_command_queue = &command_queue;
 
 	// Service is listening initially
 	currentState = &ServiceListen::getInstance();

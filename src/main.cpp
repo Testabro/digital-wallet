@@ -1,7 +1,8 @@
 #include <iostream>       // std::cout
 #include <queue>          // std::queue
 #include <sstream>        // osstringstream
-#include <assert.h>         //for test case
+#include <assert.h>       //for test case
+#include <string>         //str()
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
@@ -48,15 +49,13 @@ int main()
     // }
     // std::cout << new_event << std::endl;
   
-    std::queue<Command> command_queue;
-    
     //Init Service
-    Service service = Service(command_queue);
+    Service service = Service();
 
     // TEST setup some dummy accounts
-    rocksdb::Slice key1 = "account1";
+    rocksdb::Slice key1 = "accountA";
     std::string value1 = "100";
-    rocksdb::Slice key2 = "account2";
+    rocksdb::Slice key2 = "accountB";
     std::string value2 = "100";
 
     // TEST modify the database
@@ -68,14 +67,36 @@ int main()
 
     //TEST BALENCE XFER LOGIC- Create a command object then add it to the command file
     CROW_ROUTE(app, "/api/1.0/wallet/balance_transfer")
-    ([&command_queue,&service] {
-        Command command = Command("account1","account2","10","TRANSFER");
-        command_queue.push(command);
+    ([&service](const crow::request& req) {
+        std::ostringstream os;
+
+        // To get a simple string from the url params
+        // To see it in action /params?foo='blabla'
+        os << "Params: " << req.url_params << "\n\n"; 
+        os << "The key 'fromAccount' was " << (req.url_params.get("fromAccount") == nullptr ? "not " : "") << "found.\n";
+        os << "The key 'toAccount' was " << (req.url_params.get("toAccount") == nullptr ? "not " : "") << "found.\n";
+        os << "The key 'amount' was " << (req.url_params.get("amount") == nullptr ? "not " : "") << "found.\n";
+        if (
+            req.url_params.get("fromAccount") == nullptr ||
+            req.url_params.get("toAccount") == nullptr ||
+            req.url_params.get("amount") == nullptr
+        ){
+            return crow::response{os.str()};
+        }
+        std::string fromAccount = req.url_params.get("fromAccount");
+        std::string toAccount = req.url_params.get("toAccount");
+        std::string amount = req.url_params.get("amount");
+        //TODO: validate input parameters are in correct format
+
+        Command command = Command(fromAccount, toAccount, amount, "TRANSFER");
+        
+        service._command_queue.enqueue(command);
         //TEST State change to process command
-        service.toggle(); // listen -> validate
-        service.toggle(); // validate -> apply
-        service.toggle(); // apply -> listen
-        return "Request Receieved";
+        // service.toggle(); // listen -> validate
+        // service.toggle(); // validate -> apply
+        // service.toggle(); // apply -> listen
+
+        return crow::response{os.str()};
     });
 
     // /api/1.0/wallet/get_balance

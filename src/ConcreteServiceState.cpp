@@ -6,12 +6,12 @@
 
 void ServiceListen::toggle(Service* service) {
     std::cout << "Listen toggle" << std::endl; // DEBUG output
-    if (!service->_command_queue->empty()) {
-        // listen -> validate
-        std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
-	    service->setState(ServiceValidate::getInstance());
-        return;
-    }
+    // if (!service->_command_queue.empty()) {
+    //     // listen -> validate
+    //     std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
+	//     service->setState(ServiceValidate::getInstance());
+    //     return;
+    // }
     std::cout << "Command queue is empty" << std::endl; // DEBUG output
 }
 
@@ -24,11 +24,12 @@ ServiceState& ServiceListen::getInstance() {
 
 void ServiceValidate::toggle(Service* service) {
     std::cout << "Validate toggle" << std::endl; // DEBUG output
-    Command command = service->_command_queue->front();
+    Command command = service->_command_queue.peek();
     std::string balance;
 
     service->_status = service->_accountDB->Get(service->_read_options, "account1", &balance);
     assert(service->_status.ok());
+
     if (command.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(command.getAmount())) {
         // validate -> apply
         std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
@@ -48,9 +49,9 @@ ServiceState& ServiceValidate::getInstance() {
 void ServiceApply::toggle(Service* service) {
     std::cout << "Apply toggle" << std::endl; // DEBUG output
     //Get command from the front of the queue
-    Command command = service->_command_queue->front();
     //Remove the command from the queue
-    service->_command_queue->pop();
+    Command command = service->_command_queue.dequeue();
+
     Event eventA = Event();
     Event eventB = Event();
 
