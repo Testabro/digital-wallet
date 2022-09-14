@@ -53,10 +53,14 @@ void ServiceApply::process(Service* service, Command command) {
     //credit event
     eventA.account = command.getAccount1();
     eventA.amount = command.getAmount();
+    eventA.action = command.getAction();
+    eventA.parent_tx_id = command.getID();
 
     //debit event
     eventB.account = command.getAccount2();
     eventB.amount = command.getAmount();
+    eventB.action = command.getAction();
+    eventB.parent_tx_id = command.getID();
 
     //Update State
     std::string balance;

@@ -12,17 +12,18 @@ class Event {
         std::string action;
         std::string account;
         std::string amount;
-        std::string parent_cmd_id;
+        std::string parent_tx_id;
 
         Event(){};
         friend std::ostream& operator<<(std::ostream& os, const Event event) {
-           return os << event.parent_cmd_id << " " << event.account << " " << event.amount << " " << event.action;
+           return os << event.parent_tx_id << " " << event.account << " " << event.amount << " " << event.action;
         }
 
         void apply() {};
         const std::string toString() {
             std::ostringstream os;
-            os << "Action: " << action << " Account: " << account << " Amount: " << amount << std::endl;        
+            os << "Transaction ID: " << parent_tx_id << " Action: " << action
+               << " Account: " << account << " Amount: " << amount << std::endl;        
             return os.str();
         };
         
@@ -34,6 +35,6 @@ class Event {
             ar & action;
             ar & account;
             ar & amount;
-            ar & parent_cmd_id;
+            ar & parent_tx_id;
         }
 };

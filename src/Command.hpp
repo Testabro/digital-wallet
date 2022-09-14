@@ -18,7 +18,7 @@ class Command {
         Command(std::string account1, std::string account2, std::string amount, std::string action) :
            _account1(account1), _account2(account2), _amount(amount), _action(action){ _tx_id=generateID(); }
         friend std::ostream& operator<<(std::ostream& os, const Command command) {
-           return os << command._id << " " << command._account1 << " " << command._account2 
+           return os << command._tx_id << " " << command._account1 << " " << command._account2 
               << " " << command._amount << " " << command._action;
         }
 
@@ -35,7 +35,7 @@ class Command {
         };
 
     private:
-        std::string _id;
+        std::string _tx_id;
         std::string _account1;
         std::string _account2;
         std::string _amount;
