@@ -25,18 +25,38 @@ void ServiceValidate::process(Service* service) {
     std::cout << "Validate toggle" << std::endl; // DEBUG output
     std::string balance;
 
-    service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount1(), &balance);
+    //VALIDATE A TRANSFER COMMAND
+        service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount2(), &balance);
+    if (!service->_status.ok()) { 
+        std::cout << "Account not found" << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;        
+    }
     assert(service->_status.ok());
 
-    if (service->command_to_process.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(service->command_to_process.getAmount())) {
+    service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount1(), &balance);
+    if (!service->_status.ok()) { 
+        std::cout << "Account not found" << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;        
+    }
+    assert(service->_status.ok());
+
+    if (std::stoi(balance) <= std::stoi(service->command_to_process.getAmount())) {
+        std::cerr << "Balance too low" << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;
+    }
+
+    if (service->command_to_process.getAction() == "TRANSFER") {
         // validate -> apply
         std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
         service->setState(ServiceApply::getInstance());
         service->process();
-        return; // TODO consider way to no have previous state in call stack; I consider this a defect
+        return; // TODO consider a way to no have previous state in call stack; I consider this a defect
     }
 
-    std::cout << "Command is not valid" << std::endl; // DEBUG output
+    std::cout << "Command is not valid" << std::endl; // DEBUG output    
     service->setState(ServiceListen::getInstance()); 
 }
 

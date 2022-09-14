@@ -123,13 +123,13 @@ int main()
         std::string amount = req.url_params.get("amount");
         //TODO: validate input parameters are in correct format
 
-        Command command = Command(fromAccount, toAccount, amount, "TRANSFER");
-        
+        Command command = Command(fromAccount, toAccount, amount, "TRANSFER");        
         service._command_queue.send(std::move(command));
 
         //TEST State change to process command
         service.toggle(); // listen -> validate
 
+        os << "Return Status: " << service._status.ToString() << std::endl;
 
         return crow::response{os.str()};
     });
