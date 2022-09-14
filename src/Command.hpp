@@ -5,6 +5,10 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/random.hpp>
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+
 
 class Command {
     //action to be performed to change the state of the system;
@@ -24,9 +28,8 @@ class Command {
         std::string getAmount() { return _amount; };
         // Generate random id; TODO create id manager process and delagate this
         std::string generateID() {
-            std::time_t now = std::time(0);
-            boost::random::mt19937 gen{static_cast<std::uint32_t>(now)};
-            return std::to_string(gen());
+            boost::uuids::uuid uuid = boost::uuids::random_generator()();
+            return std::to_string(uuid);
         };
 
     private:
