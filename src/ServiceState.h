@@ -8,7 +8,7 @@ class Service;
 class ServiceState
 {
 public:
-	virtual void process(Service* Service, Command sommand) = 0;
+	virtual void process(Service* Service) = 0;
 	virtual void toggle(Service* Service) = 0;
 	virtual ~ServiceState() {}
 };

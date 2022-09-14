@@ -22,10 +22,10 @@ void Service::toggle() {
 	currentState->toggle(this);
 }
 
-void Service::process(Command command) {
+void Service::process() {
 	std::cout << "Service process" << std::endl; // DEBUG output
 	// Delegate the task of determining the next state to the current state!
-	currentState->process(this, command);
+	currentState->process(this);
 }
 
 void Service::init() {

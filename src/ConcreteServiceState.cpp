@@ -8,11 +8,11 @@
 
 void ServiceListen::toggle(Service* service) {
     std::cout << "Listen toggle" << std::endl; // DEBUG output
-    auto command = service->_command_queue.receive();
+    service->command_to_process = service->_command_queue.receive();
     // listen -> validate
     std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
     service->setState(ServiceValidate::getInstance());
-    service->process(command);
+    service->process();
 }
 
 ServiceState& ServiceListen::getInstance() {
@@ -21,18 +21,19 @@ ServiceState& ServiceListen::getInstance() {
 	return singleton;
 }
 
-void ServiceValidate::process(Service* service, Command command) {
+void ServiceValidate::process(Service* service) {
     std::cout << "Validate toggle" << std::endl; // DEBUG output
     std::string balance;
 
-    service->_status = service->_accountDB->Get(service->_read_options, command.getAccount1(), &balance);
+    service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount1(), &balance);
     assert(service->_status.ok());
 
-    if (command.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(command.getAmount())) {
+    if (service->command_to_process.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(service->command_to_process.getAmount())) {
         // validate -> apply
         std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
         service->setState(ServiceApply::getInstance());
-        service->process(command);
+        service->process();
+        return; // TODO consider way to no have previous state in call stack; I consider this a defect
     }
 
     std::cout << "Command is not valid" << std::endl; // DEBUG output
@@ -44,23 +45,23 @@ ServiceState& ServiceValidate::getInstance() {
 	return singleton;
 }
 
-void ServiceApply::process(Service* service, Command command) {
+void ServiceApply::process(Service* service) {
     std::cout << "Apply toggle" << std::endl; // DEBUG output
 
     Event eventA = Event();
     Event eventB = Event();
 
     //credit event
-    eventA.account = command.getAccount1();
-    eventA.amount = command.getAmount();
-    eventA.action = command.getAction();
-    eventA.parent_tx_id = command.getID();
+    eventA.account = service->command_to_process.getAccount1();
+    eventA.amount = service->command_to_process.getAmount();
+    eventA.action = service->command_to_process.getAction();
+    eventA.parent_tx_id = service->command_to_process.getID();
 
     //debit event
-    eventB.account = command.getAccount2();
-    eventB.amount = command.getAmount();
-    eventB.action = command.getAction();
-    eventB.parent_tx_id = command.getID();
+    eventB.account = service->command_to_process.getAccount2();
+    eventB.amount = service->command_to_process.getAmount();
+    eventB.action = service->command_to_process.getAction();
+    eventB.parent_tx_id = service->command_to_process.getID();
 
     //Update State
     std::string balance;
@@ -72,8 +73,8 @@ void ServiceApply::process(Service* service, Command command) {
     assert(service->_status.ok());    
     int accountBalanceB = std::stoi(balance);
 
-    int balance1 = accountBalanceA - std::stoi(command.getAmount());
-    int balance2 = accountBalanceB + std::stoi(command.getAmount());
+    int balance1 = accountBalanceA - std::stoi(service->command_to_process.getAmount());
+    int balance2 = accountBalanceB + std::stoi(service->command_to_process.getAmount());
 
     service->_status = service->_accountDB->Put(rocksdb::WriteOptions(), eventA.account, std::to_string(balance1));
     assert(service->_status.ok());

@@ -6,7 +6,7 @@
 class ServiceListen: public ServiceState
 {
 public:
-	void process(Service* Service, Command sommand) {}
+	void process(Service* Service) {}
 	void toggle(Service* Service);
 	static ServiceState& getInstance();
 
@@ -20,7 +20,7 @@ private:
 class ServiceValidate: public ServiceState
 {
 public:
-	void process(Service* Service, Command sommand);
+	void process(Service* Service);
 	void toggle(Service* Service) {}
 	static ServiceState& getInstance();
 
@@ -35,7 +35,7 @@ class ServiceApply: public ServiceState
 {
 public:
 	void toggle(Service* Service) {}
-	void process(Service* Service, Command sommand);
+	void process(Service* Service);
 	static ServiceState& getInstance();
 
 private:

@@ -16,7 +16,7 @@ class Service {
         Service();
         inline ServiceState* getCurrentState() const { return currentState; }
         void toggle(); //Delagate to current state
-        void process(Command command); //Delagate to current state
+        void process(); //Delagate to current state
         // This will get called by the current state
 	    void setState(ServiceState& newState);
 
@@ -26,6 +26,7 @@ class Service {
         rocksdb::Options _options; 
         MessageQueue<Command> _command_queue;
         ServiceState *currentState;
+        Command command_to_process;
                 
     private:
         void init();
