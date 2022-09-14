@@ -111,12 +111,12 @@ int main()
         std::string value;
 
         // TEST Get value account 1
-        service._status = service._accountDB->Get(service._read_options, "account1", &value);
+        service._status = service._accountDB->Get(service._read_options, "accountA", &value);
         assert(service._status.ok()); 
         os << "Account 1: " << value << std::endl;
 
         // // TEST Get value account 2
-        service._status = service._accountDB->Get(service._read_options, "account2", &value);
+        service._status = service._accountDB->Get(service._read_options, "accountB", &value);
         assert(service._status.ok()); 
         os << "Account 2: " << value << std::endl;
 
