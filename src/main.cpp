@@ -127,7 +127,7 @@ int main()
         service._command_queue.send(std::move(command));
 
         //TEST State change to process command
-        service.toggle(); // listen -> validate
+        service.toggle(); // listen -> validate; TODO can be a DEFECT source in the form of a race condition
 
         os << "Return Status: " << service._status.ToString() << std::endl;
 
