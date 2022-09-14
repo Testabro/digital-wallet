@@ -147,11 +147,15 @@ int main()
             return crow::response{os.str()};
         }
         std::string accountID = req.url_params.get("accountID");
-        
-        // TEST Get value account 1
+
         service._status = service._accountDB->Get(service._read_options, accountID, &value);
-        assert(service._status.ok()); 
-        os << "Account: " << accountID << " : Balance: " << value << std::endl;
+        if (service._status.ok()) {
+            os << "Account: " << accountID << " : Balance: " << value << std::endl;
+        }
+        if (!service._status.ok()) {
+            std::cerr << "Account " << accountID << " not found."; 
+            os << "Account not found" << std::endl;
+        }        
 
         return crow::response{os.str()};
     });
