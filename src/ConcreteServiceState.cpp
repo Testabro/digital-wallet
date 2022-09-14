@@ -1,18 +1,18 @@
-#include "ConcreteServiceState.h"
 #include <iostream>       // std::cout
 #include <string>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
+#include "ConcreteServiceState.h"
+#include "MessageQueue.h"
+
 void ServiceListen::toggle(Service* service) {
     std::cout << "Listen toggle" << std::endl; // DEBUG output
-    // if (!service->_command_queue.empty()) {
-    //     // listen -> validate
-    //     std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
-	//     service->setState(ServiceValidate::getInstance());
-    //     return;
-    // }
-    std::cout << "Command queue is empty" << std::endl; // DEBUG output
+    auto command = service->_command_queue.receive();
+    // listen -> validate
+    std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
+    service->setState(ServiceValidate::getInstance());
+    service->process(command);
 }
 
 ServiceState& ServiceListen::getInstance() {
@@ -21,20 +21,18 @@ ServiceState& ServiceListen::getInstance() {
 	return singleton;
 }
 
-
-void ServiceValidate::toggle(Service* service) {
+void ServiceValidate::process(Service* service, Command command) {
     std::cout << "Validate toggle" << std::endl; // DEBUG output
-    Command command = service->_command_queue.peek();
     std::string balance;
 
-    service->_status = service->_accountDB->Get(service->_read_options, "account1", &balance);
+    service->_status = service->_accountDB->Get(service->_read_options, command.getAccount1(), &balance);
     assert(service->_status.ok());
 
     if (command.getAction() == "TRANSFER" && std::stoi(balance) >= std::stoi(command.getAmount())) {
         // validate -> apply
         std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
         service->setState(ServiceApply::getInstance());
-        return;
+        service->process(command);
     }
 
     std::cout << "Command is not valid" << std::endl; // DEBUG output
@@ -46,11 +44,8 @@ ServiceState& ServiceValidate::getInstance() {
 	return singleton;
 }
 
-void ServiceApply::toggle(Service* service) {
+void ServiceApply::process(Service* service, Command command) {
     std::cout << "Apply toggle" << std::endl; // DEBUG output
-    //Get command from the front of the queue
-    //Remove the command from the queue
-    Command command = service->_command_queue.dequeue();
 
     Event eventA = Event();
     Event eventB = Event();

@@ -6,23 +6,8 @@
 #include "ServiceState.h"
 #include "Event.hpp"
 #include "Command.hpp"
+#include "MessageQueue.h"
 
-class CommandQueue {
-    public:
-        std::queue<Command> _command_queue;
-        void enqueue(Command command) {
-            _command_queue.push(command);
-            // Notify();
-        }
-        Command dequeue() {
-            Command front = _command_queue.front();
-            _command_queue.pop();
-            return front;
-        }
-        Command& peek() {
-            return _command_queue.front();
-        }
-};
 class ServiceState;
 
 class Service {
@@ -30,7 +15,8 @@ class Service {
     public:
         Service();
         inline ServiceState* getCurrentState() const { return currentState; }
-        void toggle();
+        void toggle(); //Delagate to current state
+        void process(Command command); //Delagate to current state
         // This will get called by the current state
 	    void setState(ServiceState& newState);
 
@@ -38,8 +24,9 @@ class Service {
         rocksdb::Status _status;
         rocksdb::ReadOptions _read_options;
         rocksdb::Options _options; 
-        CommandQueue _command_queue;                
-        ServiceState *currentState;        
+        MessageQueue<Command> _command_queue;
+        ServiceState *currentState;
+                
     private:
         void init();
 };

@@ -8,25 +8,27 @@ Service::Service() {
 
 	// Service is listening initially
 	currentState = &ServiceListen::getInstance();
+	  //Start the state machine on an async thread
 	init();
 }
 
-void Service::setState(ServiceState& newState)
-{
-	currentState->exit(this);  // do stuff before we change state
+void Service::setState(ServiceState& newState) {
 	currentState = &newState;  // change state
-	currentState->enter(this); // do stuff after we change state
 }
 
-void Service::toggle()
-{
+void Service::toggle() {
 	std::cout << "Service toggle" << std::endl; // DEBUG output
 	// Delegate the task of determining the next state to the current state!
 	currentState->toggle(this);
 }
 
-void Service::init()
-{
+void Service::process(Command command) {
+	std::cout << "Service process" << std::endl; // DEBUG output
+	// Delegate the task of determining the next state to the current state!
+	currentState->process(this, command);
+}
+
+void Service::init() {
     //Init DB with options for account balances  
     _options.create_if_missing = true;
     //options.error_if_exists = true; // DEBUG

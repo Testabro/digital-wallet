@@ -9,6 +9,12 @@
 #include "Service.h"
 #include "../lib/crowapi/crow_all.h"
 
+
+#include <thread>
+#include <future>
+#include <mutex>
+
+
 int main()
 {
     //Init API to process commands
@@ -63,7 +69,7 @@ int main()
     assert(service._status.ok());
     service._status = service._accountDB->Put(rocksdb::WriteOptions(), key2, value2);
     assert(service._status.ok());
-
+   
 
     //TEST BALENCE XFER LOGIC- Create a command object then add it to the command file
     CROW_ROUTE(app, "/api/1.0/wallet/balance_transfer")
@@ -90,11 +96,11 @@ int main()
 
         Command command = Command(fromAccount, toAccount, amount, "TRANSFER");
         
-        service._command_queue.enqueue(command);
+        service._command_queue.send(std::move(command));
+
         //TEST State change to process command
-        // service.toggle(); // listen -> validate
-        // service.toggle(); // validate -> apply
-        // service.toggle(); // apply -> listen
+        service.toggle(); // listen -> validate
+
 
         return crow::response{os.str()};
     });
@@ -132,5 +138,5 @@ int main()
     });
 
     app.port(18080).multithreaded().run();
-   
+  
 }

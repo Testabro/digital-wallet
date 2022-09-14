@@ -1,17 +1,18 @@
 #pragma once
 #include "ServiceState.h"
 #include "Service.h"
+#include "Command.hpp"
 
 class ServiceListen: public ServiceState
 {
 public:
-	void enter(Service* Service) {}
+	void process(Service* Service, Command sommand) {}
 	void toggle(Service* Service);
-	void exit(Service* Service) {}
 	static ServiceState& getInstance();
 
 private:
 	ServiceListen() {}
+	~ServiceListen() {}
 	ServiceListen(const ServiceListen& other);
 	ServiceListen& operator=(const ServiceListen& other);
 };
@@ -19,13 +20,13 @@ private:
 class ServiceValidate: public ServiceState
 {
 public:
-	void enter(Service* Service) {}
-	void toggle(Service* Service);
-	void exit(Service* Service) {}
+	void process(Service* Service, Command sommand);
+	void toggle(Service* Service) {}
 	static ServiceState& getInstance();
 
 private:
 	ServiceValidate() {}
+	~ServiceValidate() {}
 	ServiceValidate(const ServiceValidate& other);
 	ServiceValidate& operator=(const ServiceValidate& other);
 };
@@ -33,13 +34,13 @@ private:
 class ServiceApply: public ServiceState
 {
 public:
-	void enter(Service* Service) {}
-	void toggle(Service* Service);
-	void exit(Service* Service) {}
+	void toggle(Service* Service) {}
+	void process(Service* Service, Command sommand);
 	static ServiceState& getInstance();
 
 private:
 	ServiceApply() {}
+	~ServiceApply() {}
 	ServiceApply(const ServiceListen& other);
 	ServiceApply& operator=(const ServiceApply& other);
 };
