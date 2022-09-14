@@ -139,7 +139,7 @@ int main()
         std::ostringstream os;
         std::string value;
 
-                // To get a simple string from the url params
+        // To get a simple string from the url params
         // To see it in action /params?foo='blabla'
         os << "Params: " << req.url_params << "\n\n"; 
         os << "The key 'accountID' was " << (req.url_params.get("accountID") == nullptr ? "not " : "") << "found.\n";
@@ -160,17 +160,23 @@ int main()
         return crow::response{os.str()};
     });
 
-        CROW_ROUTE(app, "/api/1.0/wallet/events")([](){
+    CROW_ROUTE(app, "/api/1.0/wallet/events")([](){
         std::ostringstream os;
         //TEST open event log through mem mapped file
-        Event new_event1 = Event();
-        Event new_event2 = Event();
-        std::ifstream ifs("/tmp/event-log.txt");
-        {
-            boost::archive::text_iarchive ia(ifs);
-            ia >> new_event1 >> new_event2;
+        Event event1 = Event();
+        Event event2 = Event();
+        if (boost::filesystem::exists( "/tmp/event-log.txt" )) {
+            {
+                std::ifstream ifs("/tmp/event-log.txt");
+                //TODO make it possible to query specific times, tx_id, etc.
+                //   As is this will not scale and is A TEMPORARY PROOF OF FUNCTION
+                boost::archive::text_iarchive ia(ifs);
+                ia >> event1 >> event2;
+            }
         }
-        os << new_event1.toString() << std::endl << new_event2.toString();
+
+        os << event1.toString() << std::endl << event2.toString() << std::endl;
+
         return os.str();
     });
 
