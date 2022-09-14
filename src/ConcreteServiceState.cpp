@@ -73,13 +73,13 @@ void ServiceApply::process(Service* service) {
 
     //credit event
     eventA.account = service->command_to_process.getAccount1();
-    eventA.amount = service->command_to_process.getAmount();
+    eventA.amount = "-" + service->command_to_process.getAmount();
     eventA.action = service->command_to_process.getAction();
     eventA.parent_tx_id = service->command_to_process.getID();
 
     //debit event
     eventB.account = service->command_to_process.getAccount2();
-    eventB.amount = service->command_to_process.getAmount();
+    eventB.amount = "+" + service->command_to_process.getAmount();
     eventB.action = service->command_to_process.getAction();
     eventB.parent_tx_id = service->command_to_process.getID();
 
