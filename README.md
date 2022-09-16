@@ -47,3 +47,13 @@ Using the RockDB integration
 using crow c++ API (https://github.com/CrowCpp/Crow)  
 using boost.io for mmapped command and event files  
 using rocksdb for key-value store of account and balences
+
+## Design
+
+Event sourcing  
+![Event Sourceing](event-sourcing.png)
+
+Service State Machine  
+![Service State Machine](service-statemachine.png)
+
+
