@@ -32,7 +32,7 @@ make static_lib
 mv librocksdb.a ..
 ```
 ```
-cmake ..  
+cd .. & cmake ..  
 ```
 ```
 make  
