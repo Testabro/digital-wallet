@@ -2,8 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-// #include <boost/archive/binary_oarchive.hpp>
-// #include <boost/archive/binary_iarchive.hpp>
+
 #include <boost/random.hpp>
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
@@ -41,6 +40,7 @@ class Command {
         std::string _amount;
         std::string _action;
 
+        // Uncomment this block is serializing for use in a boost archive file
         // friend class boost::serialization::access;
         // template<class Archive>
         // void serialize(Archive &ar,

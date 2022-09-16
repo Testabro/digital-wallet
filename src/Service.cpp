@@ -5,10 +5,8 @@
 
 Service::Service() {
 	std::cout << "Create service" << std::endl; // DEBUG output
-
 	// Service is listening initially
 	currentState = &ServiceListen::getInstance();
-	  //Start the state machine on an async thread
 	init();
 }
 
@@ -19,7 +17,7 @@ void Service::setState(ServiceState& newState) {
 
 void Service::toggle() {
 	std::cout << "Service toggle" << std::endl; // DEBUG output
-	// Delegate the task of determining the next state to the current state!
+	// Delegate the task of determining the next state to the current state
 	currentState->toggle(this);
 }
 

@@ -7,17 +7,14 @@
 #include "MessageQueue.h"
 
 std::string ServiceListen::getStateName() {
-    //Notify all that State Machine is in a listen state
     return "LISTEN";
 }
 
 std::string ServiceValidate::getStateName() {
-    //Notify all that State Machine is in a listen state
     return "VALIDATE";
 }
 
 std::string ServiceApply::getStateName() {
-    //Notify all that State Machine is in a listen state
     return "APPLY";
 }
 
@@ -47,10 +44,9 @@ void ServiceValidate::process(Service* service) {
     std::string balance;
 
     //VALIDATE A TRANSFER COMMAND
-        service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount2(), &balance);
+    service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount2(), &balance);
     if (!service->_status.ok()) { 
         std::cout << "Account not found" << std::endl;
-            //Notify all that State Machine is in a listen state
         service->setState(ServiceListen::getInstance());
         return;        
     }

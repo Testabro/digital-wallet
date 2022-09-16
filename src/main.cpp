@@ -11,11 +11,6 @@
 #include "Service.h"
 #include "../lib/crowapi/crow_all.h"
 
-
-#include <thread>
-#include <future>
-#include <mutex>
-
 void generateSeedFile( std::string seed_file ) {
     if ( !boost::filesystem::exists( seed_file ) ) {
         int init_num = 0;
@@ -37,8 +32,7 @@ std::string genAccountID( std::string seed_file ) {
         std::ifstream ifs(seed_file);
         boost::archive::text_iarchive ia(ifs);
         ia >> account_num;
-    }
-    
+    }    
     account_num++;
     //Add to event log
     {
@@ -91,7 +85,7 @@ int main()
         rocksdb::Slice key = accountID;
         std::string value = req.url_params.get("startAmount");
 
-        // TEST modify the database
+        // Add the new account to the database
         service._status = service._accountDB->Put(rocksdb::WriteOptions(), key, value);
         assert(service._status.ok());
 
@@ -100,7 +94,6 @@ int main()
         return crow::response{os.str()};
     });
 
-    //TEST BALENCE XFER LOGIC- Create a command object then add it to the command file
     CROW_ROUTE(app, "/api/1.0/wallet/balance_transfer")
     ([&service](const crow::request& req) {
         std::ostringstream os;
@@ -121,28 +114,21 @@ int main()
         std::string fromAccount = req.url_params.get("fromAccount");
         std::string toAccount = req.url_params.get("toAccount");
         std::string amount = req.url_params.get("amount");
-        //TODO: validate input parameters are in correct format
 
         Command command = Command(fromAccount, toAccount, amount, "TRANSFER");        
         service._command_queue.send(std::move(command));
 
-        //TEST State change to process command
+        //Wait until the STATE MACHINE(SERVICE) is in a LISTEN state then request to process the command
         std::unique_lock<std::mutex> lk(service.cv_m);
         std::cerr << "Waiting... \n";
-        // service.cv.wait(lk, [&service]{service.toggle();});
         service.cv.wait(lk, [&service]{ return service.currentState->getStateName() == "LISTEN"; });
         service.toggle();
 
         std::cerr << "...finished waiting. StateMachine in listen state\n";
-        
-         // listen -> validate; TODO can be a DEFECT source in the form of a race condition
-
         os << "Return Status: " << service._status.ToString() << std::endl;
-
         return crow::response{os.str()};
     });
 
-    // /api/1.0/wallet/get_balance
     CROW_ROUTE(app, "/api/1.0/wallet/get_balance")([&service](const crow::request& req){
         std::ostringstream os;
         std::string value;
