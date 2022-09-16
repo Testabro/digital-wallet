@@ -50,10 +50,8 @@ using rocksdb for key-value store of account and balences
 
 ## Design
 
-Event sourcing  
 ![Event Sourceing](event-sourcing.png)
 
-Service State Machine  
 ![Service State Machine](service-statemachine.png)
 
 
