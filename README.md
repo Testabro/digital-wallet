@@ -50,8 +50,8 @@ using rocksdb for key-value store of account and balences
 
 ## Design
 
-![Event Sourceing](event-sourcing.png)
+![Event Sourceing](event-sourcing.png =250x250)
 
-![Service State Machine](service-statemachine.png)
+![Service State Machine](service-statemachine.png =250x250)
 
 
