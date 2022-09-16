@@ -20,6 +20,18 @@ mkdir build
 cd build  
 ```
 ```
+git clone https://github.com/facebook/rocksdb.git
+```
+```
+cd rocksdb
+```
+```
+make static_lib
+```
+```
+mv librocksdb.a ..
+```
+```
 cmake ..  
 ```
 ```
