@@ -1,5 +1,5 @@
 # digital-wallet  
-C++ backend wallet service
+C++ backend wallet service. This is a backend service that provides high volume REST-like API functions to client processes. It is meant to be a stand alone service were multiple instances can be managed by an orchestrator in the future.
 
 ## Prereqs  
 Base source  
@@ -34,4 +34,4 @@ Using the RockDB integration
 ## Integrations  
 using crow c++ API (https://github.com/CrowCpp/Crow)  
 using boost.io for mmapped command and event files  
-using rocksdb for key-value store of account and balences  
+using rocksdb for key-value store of account and balences
