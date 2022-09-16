@@ -27,6 +27,8 @@ class Service {
         MessageQueue<Command> _command_queue;
         ServiceState *currentState;
         Command command_to_process;
+        std::condition_variable cv;
+        std::mutex cv_m; 
                 
     private:
         void init();

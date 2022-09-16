@@ -127,7 +127,15 @@ int main()
         service._command_queue.send(std::move(command));
 
         //TEST State change to process command
-        service.toggle(); // listen -> validate; TODO can be a DEFECT source in the form of a race condition
+        std::unique_lock<std::mutex> lk(service.cv_m);
+        std::cerr << "Waiting... \n";
+        // service.cv.wait(lk, [&service]{service.toggle();});
+        service.cv.wait(lk, [&service]{ return service.currentState->getStateName() == "LISTEN"; });
+        service.toggle();
+
+        std::cerr << "...finished waiting. StateMachine in listen state\n";
+        
+         // listen -> validate; TODO can be a DEFECT source in the form of a race condition
 
         os << "Return Status: " << service._status.ToString() << std::endl;
 

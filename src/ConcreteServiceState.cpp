@@ -6,6 +6,27 @@
 #include "ConcreteServiceState.h"
 #include "MessageQueue.h"
 
+std::string ServiceListen::getStateName() {
+    //Notify all that State Machine is in a listen state
+    return "LISTEN";
+}
+
+std::string ServiceValidate::getStateName() {
+    //Notify all that State Machine is in a listen state
+    return "VALIDATE";
+}
+
+std::string ServiceApply::getStateName() {
+    //Notify all that State Machine is in a listen state
+    return "APPLY";
+}
+
+
+void ServiceListen::onEnter(Service* service) {
+    //Notify all that State Machine is in a listen state
+    service->cv.notify_all();
+}
+
 void ServiceListen::toggle(Service* service) {
     std::cout << "Listen toggle" << std::endl; // DEBUG output
     service->command_to_process = service->_command_queue.receive();
@@ -29,6 +50,7 @@ void ServiceValidate::process(Service* service) {
         service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount2(), &balance);
     if (!service->_status.ok()) { 
         std::cout << "Account not found" << std::endl;
+            //Notify all that State Machine is in a listen state
         service->setState(ServiceListen::getInstance());
         return;        
     }

@@ -14,6 +14,7 @@ Service::Service() {
 
 void Service::setState(ServiceState& newState) {
 	currentState = &newState;  // change state
+	currentState->onEnter(this);
 }
 
 void Service::toggle() {
