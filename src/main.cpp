@@ -14,7 +14,7 @@
 void generateSeedFile( std::string seed_file ) {
     if ( !boost::filesystem::exists( seed_file ) ) {
         int init_num = 0;
-        //Add to event log
+        //Create seed file for count
         {
             std::ofstream ofs( seed_file );
             boost::archive::text_oarchive oa(ofs);
@@ -34,7 +34,7 @@ std::string genAccountID( std::string seed_file ) {
         ia >> account_num;
     }    
     account_num++;
-    //Add to event log
+    //Add new incremented account number to seed file
     {
         std::ofstream ofs(seed_file);
         boost::archive::text_oarchive oa(ofs);
@@ -122,7 +122,7 @@ int main()
         std::unique_lock<std::mutex> lk(service.cv_m);
         std::cerr << "Waiting... \n";
         service.cv.wait(lk, [&service]{ return service.currentState->getStateName() == "LISTEN"; });
-        service.toggle();
+        service.toggle();//Request to read the command; expected to be in listen state
 
         std::cerr << "...finished waiting. StateMachine in listen state\n";
         os << "Return Status: " << service._status.ToString() << std::endl;
