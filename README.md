@@ -83,25 +83,25 @@ ServiceState.h
 
 #### Loops, Functions, I/O  
 The project demonstrates an understanding of C++ functions and control structures. 
-The project accepts user input and processes the input.
-The project reads data from an external file or writes data to a file as part of the necessary operation of the program.
+The project accepts user input and processes the input.  
+The project reads data from an external file or writes data to a file as part of the necessary operation of the program.  
 
 
 #### Object Oriented Programming  
-The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.
-All class data members are explicitly specified as public, protected, or private.
-Class constructors utilize member initialization lists.
-Classes abstract implementation details from their interfaces.
-Derived class functions override virtual base class functions.
+The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.  
+All class data members are explicitly specified as public, protected, or private.  
+Class constructors utilize member initialization lists.  
+Classes abstract implementation details from their interfaces.  
+Derived class functions override virtual base class functions.  
 
 
 #### Memory Management  
-The project makes use of references in function declarations.
-At least two variables are defined as references, or two functions use pass-by-reference in the project code.
-The project uses destructors appropriately.
-The project uses move semantics to move data, instead of copying it, where possible.
+The project makes use of references in function declarations.  
+At least two variables are defined as references, or two functions use pass-by-reference in the project code.  
+The project uses destructors appropriately.  
+The project uses move semantics to move data, instead of copying it, where possible.  
 
 
 #### Concurrency  
-A mutex or lock (e.g. std::lock_guard or `std::unique_lock) is used to protect data that is shared across multiple threads in the project code.
-A std::condition_variable is used in the project code to synchronize thread execution.
+A mutex or lock (e.g. std::lock_guard or `std::unique_lock) is used to protect data that is shared across multiple threads in the project code.  
+A std::condition_variable is used in the project code to synchronize thread execution.  
