@@ -1,5 +1,5 @@
 # digital-wallet  
-C++ backend wallet service. This is a backend service that provides high volume REST-like API functions to client processes. It accounts for transactions based on a defined value and a generated account ID. It is meant to be a stand alone service were multiple instances can be managed by an orchestrator in the future.
+C++ backend wallet service. This is a backend service that provides high volume REST-like API functions to client processes. It accounts for transactions based on a defined value and a generated account ID. It is meant to be a stand alone service so that multiple instances can be managed by an orchestrator in the future.
 
 Example Execution:  
 ```
