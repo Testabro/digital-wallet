@@ -67,5 +67,5 @@ using rocksdb for key-value store of account and balences
 ## Design
 
 <img src="event-sourcing.png " width="600" height="300">
-<img src="service-statemachine.jpeg" width="600" height="600">
+<img src="service-statemachine.jpeg" width="400" height="400">
 
