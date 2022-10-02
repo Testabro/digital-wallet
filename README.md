@@ -15,7 +15,8 @@ curl -X GET "http://localhost:18080/api/1.0/wallet/balance_transfer?fromAccount=
 ```
 curl -X GET "http://localhost:18080/api/1.0/wallet/get_balance?accountID=accountA"
 ``` 
-<img src="account-balance-ex.png" width="200" height="50">
+<img src="account-balance-ex.png" width="200" height="50">  
+
 ## Prereqs  
 Base source  
 ```
