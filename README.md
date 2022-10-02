@@ -5,7 +5,7 @@ Example Execution:
 ```
 curl -X GET "localhost:18080/api/1.0/wallet/create_account?startAmount=1000"
 ```
-<img src="create-account-ex.png" width="350" height="50">
+<img src="create-account-ex.png" width="300" height="50">
 
 ```
 curl -X GET "http://localhost:18080/api/1.0/wallet/balance_transfer?fromAccount=accountA&toAccount=accountB&amount=10"
@@ -15,7 +15,7 @@ curl -X GET "http://localhost:18080/api/1.0/wallet/balance_transfer?fromAccount=
 ```
 curl -X GET "http://localhost:18080/api/1.0/wallet/get_balance?accountID=accountA"
 ``` 
-<img src="account-balance-ex.png" width="350" height="50">
+<img src="account-balance-ex.png" width="300" height="50">
 ## Prereqs  
 Base source  
 ```
