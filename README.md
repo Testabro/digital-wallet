@@ -5,18 +5,17 @@ Example Execution:
 ```
 curl -X GET "localhost:18080/api/1.0/wallet/create_account?startAmount=1000"
 ```
-![Create Account](create-account-ex.png) 
+<img src="create-account-ex.png" width="350" height="100">
 
 ```
 curl -X GET "http://localhost:18080/api/1.0/wallet/balance_transfer?fromAccount=accountA&toAccount=accountB&amount=10"
 ```
-![Transfer Balance](xfer-account-ex.png)  
+<img src="xfer-account-ex.png" width="350" height="100">
 
 ```
 curl -X GET "http://localhost:18080/api/1.0/wallet/get_balance?accountID=accountA"
-```
-![Get Account Balance](account-balance-ex.png) 
-
+``` 
+<img src="account-balance-ex.png" width="350" height="100">
 ## Prereqs  
 Base source  
 ```
