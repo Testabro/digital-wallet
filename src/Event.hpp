@@ -6,7 +6,6 @@
 #include <boost/archive/binary_iarchive.hpp>
 
 class Event {
-    //representation of the change that occured in the system per account
 
     public:
         std::string action;

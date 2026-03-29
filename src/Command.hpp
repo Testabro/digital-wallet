@@ -21,12 +21,11 @@ class Command {
               << " " << command._amount << " " << command._action;
         }
 
-        std::string getID() { return _tx_id; }; //DEBUG
+        std::string getID() { return _tx_id; };
         std::string getAction() { return _action; };
         std::string getAccount1() { return _account1; };
         std::string getAccount2() { return _account2; };
         std::string getAmount() { return _amount; };
-        // Generate random id; TODO create id manager process and delagate this
         std::string generateID() {
             boost::uuids::uuid uuid = boost::uuids::random_generator()();
             const std::string uuid_string = boost::lexical_cast<std::string>(uuid);
@@ -40,15 +39,4 @@ class Command {
         std::string _amount;
         std::string _action;
 
-        // Uncomment this block is serializing for use in a boost archive file
-        // friend class boost::serialization::access;
-        // template<class Archive>
-        // void serialize(Archive &ar,
-        // const unsigned int version){
-        //     ar & _id;
-        //     ar & _account1;
-        //     ar & _account2;
-        //     ar & _amount;
-        //     ar & _action;
-        // }
 };

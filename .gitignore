@@ -1,4 +1,22 @@
+# Build
 build/
+*.o
+*.a
+*.so
 *.gch
+wallet-service
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
 *.Identifier
-*.png
+
+# Temp
+/tmp/

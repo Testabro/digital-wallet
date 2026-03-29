@@ -1,8 +1,7 @@
-#include <iostream>       // std::cout
-#include <queue>          // std::queue
-#include <sstream>        // osstringstream
-#include <assert.h>       //for test case
-#include <string>         //str()
+#include <iostream>
+#include <queue>
+#include <sstream>
+#include <string>
 
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -44,44 +43,25 @@ std::string genAccountID( std::string seed_file ) {
     std::ostringstream os;
 
     os << "7" << std::setw(8) << std::setfill('0') << account_num;
-    std::cout << os.str();
     return os.str();
 }
 
 int main()
 {
-    //Init API to process commands
     crow::SimpleApp app;
 
-    //Init Service
     Service service = Service();
-
-    // TEST setup some dummy accounts
-    rocksdb::Slice key1 = "accountA";
-    std::string value1 = "100";
-    rocksdb::Slice key2 = "accountB";
-    std::string value2 = "100";
-
-    // TEST modify the database
-    service._status = service._accountDB->Put(rocksdb::WriteOptions(), key1, value1);
-    assert(service._status.ok());
-    service._status = service._accountDB->Put(rocksdb::WriteOptions(), key2, value2);
-    assert(service._status.ok());
    
     CROW_ROUTE(app, "/api/1.0/wallet/create_account")
     ([&service](const crow::request& req) {
         std::ostringstream os;
 
-        // To get a simple string from the url params
-        // To see it in action /params?foo='blabla'
-        os << "Params: " << req.url_params << "\n\n"; 
-        os << "The key 'startAmount' was " << (req.url_params.get("startAmount") == nullptr ? "not " : "") << "found.\n";
-        if ( req.url_params.get("startAmount") == nullptr ){
+        if (req.url_params.get("startAmount") == nullptr) {
+            os << "Missing required parameter: startAmount" << std::endl;
             return crow::response{os.str()};
         }
-        
+
         std::string accountID = genAccountID("/tmp/account-seed.dat");
-        std::cout << accountID;
         rocksdb::Slice key = accountID;
         std::string value = req.url_params.get("startAmount");
 
@@ -98,17 +78,10 @@ int main()
     ([&service](const crow::request& req) {
         std::ostringstream os;
 
-        // To get a simple string from the url params
-        // To see it in action /params?foo='blabla'
-        os << "Params: " << req.url_params << "\n\n"; 
-        os << "The key 'fromAccount' was " << (req.url_params.get("fromAccount") == nullptr ? "not " : "") << "found.\n";
-        os << "The key 'toAccount' was " << (req.url_params.get("toAccount") == nullptr ? "not " : "") << "found.\n";
-        os << "The key 'amount' was " << (req.url_params.get("amount") == nullptr ? "not " : "") << "found.\n";
-        if (
-            req.url_params.get("fromAccount") == nullptr ||
+        if (req.url_params.get("fromAccount") == nullptr ||
             req.url_params.get("toAccount") == nullptr ||
-            req.url_params.get("amount") == nullptr
-        ){
+            req.url_params.get("amount") == nullptr) {
+            os << "Missing required parameters: fromAccount, toAccount, amount" << std::endl;
             return crow::response{os.str()};
         }
         std::string fromAccount = req.url_params.get("fromAccount");
@@ -118,13 +91,10 @@ int main()
         Command command = Command(fromAccount, toAccount, amount, "TRANSFER");        
         service._command_queue.send(std::move(command));
 
-        //Wait until the STATE MACHINE(SERVICE) is in a LISTEN state then request to process the command
+        // Wait until the state machine is in LISTEN state, then trigger processing
         std::unique_lock<std::mutex> lk(service.cv_m);
-        std::cerr << "Waiting... \n";
         service.cv.wait(lk, [&service]{ return service.currentState->getStateName() == "LISTEN"; });
-        service.toggle();//Request to read the command; expected to be in listen state
-
-        std::cerr << "...finished waiting. StateMachine in listen state\n";
+        service.toggle();
         os << "Return Status: " << service._status.ToString() << std::endl;
         return crow::response{os.str()};
     });
@@ -133,11 +103,8 @@ int main()
         std::ostringstream os;
         std::string value;
 
-        // To get a simple string from the url params
-        // To see it in action /params?foo='blabla'
-        os << "Params: " << req.url_params << "\n\n"; 
-        os << "The key 'accountID' was " << (req.url_params.get("accountID") == nullptr ? "not " : "") << "found.\n";
-         if ( req.url_params.get("accountID") == nullptr ){
+        if (req.url_params.get("accountID") == nullptr) {
+            os << "Missing required parameter: accountID" << std::endl;
             return crow::response{os.str()};
         }
         std::string accountID = req.url_params.get("accountID");
@@ -156,14 +123,11 @@ int main()
 
     CROW_ROUTE(app, "/api/1.0/wallet/events")([](){
         std::ostringstream os;
-        //TEST open event log through mem mapped file
         Event event1 = Event();
         Event event2 = Event();
         if (boost::filesystem::exists( "/tmp/event-log.txt" )) {
             {
                 std::ifstream ifs("/tmp/event-log.txt");
-                //TODO make it possible to query specific times, tx_id, etc.
-                //   As is this will not scale and is A TEMPORARY PROOF OF FUNCTION
                 boost::archive::text_iarchive ia(ifs);
                 ia >> event1 >> event2;
             }

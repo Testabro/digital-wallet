@@ -28,7 +28,6 @@ public:
         std::lock_guard<std::mutex> uLock(_mutex);
 
         // add vector to queue
-        std::cout << "   Message " << msg << " has been sent to the queue" << std::endl;
         _messages.push_back(std::move(msg));
         _cond.notify_one(); // notify client after pushing new Command into vector
     }

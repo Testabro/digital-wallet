@@ -2,7 +2,6 @@
 #include "Service.h"
 #include "Command.hpp"
 
-// TODO clear forward delcaration if possible to replace this workaround for circular dependencies
 class Service;
 
 class ServiceState

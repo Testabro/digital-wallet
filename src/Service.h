@@ -15,12 +15,12 @@ class Service {
     public:
         Service();
         inline ServiceState* getCurrentState() const { return currentState; }
-        void toggle(); //Delagate to current state
-        void process(); //Delagate to current state
+        void toggle();
+        void process();
         // This will get called by the current state
 	    void setState(ServiceState& newState);
 
-        rocksdb::DB* _accountDB; //Init a rockdb handle for database access
+        rocksdb::DB* _accountDB;
         rocksdb::Status _status;
         rocksdb::ReadOptions _read_options;
         rocksdb::Options _options; 

@@ -25,22 +25,18 @@ void ServiceListen::onEnter(Service* service) {
 }
 
 void ServiceListen::toggle(Service* service) {
-    std::cout << "Listen toggle" << std::endl; // DEBUG output
     service->command_to_process = service->_command_queue.receive();
     // listen -> validate
-    std::cout << "Listen toggle SUCCESS" << std::endl; // DEBUG output
     service->setState(ServiceValidate::getInstance());
     service->process();
 }
 
 ServiceState& ServiceListen::getInstance() {
-    std::cout << "Get listen state" << std::endl; // DEBUG output
 	static ServiceListen singleton;
 	return singleton;
 }
 
 void ServiceValidate::process(Service* service) {
-    std::cout << "Validate toggle" << std::endl; // DEBUG output
     std::string balance;
 
     //VALIDATE A TRANSFER COMMAND
@@ -68,13 +64,11 @@ void ServiceValidate::process(Service* service) {
 
     if (service->command_to_process.getAction() == "TRANSFER") {
         // validate -> apply
-        std::cout << "Validate toggle SUCCESS" << std::endl; // DEBUG output
         service->setState(ServiceApply::getInstance());
         service->process();
-        return; // TODO consider a way to no have previous state in call stack; I consider this a defect
+        return;
     }
 
-    std::cout << "Command is not valid" << std::endl; // DEBUG output    
     service->setState(ServiceListen::getInstance()); 
 }
 
@@ -84,7 +78,6 @@ ServiceState& ServiceValidate::getInstance() {
 }
 
 void ServiceApply::process(Service* service) {
-    std::cout << "Apply toggle" << std::endl; // DEBUG output
 
     Event eventA = Event();
     Event eventB = Event();
