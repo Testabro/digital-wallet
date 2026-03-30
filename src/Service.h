@@ -23,13 +23,13 @@ class Service {
         rocksdb::DB* _accountDB;
         rocksdb::Status _status;
         rocksdb::ReadOptions _read_options;
-        rocksdb::Options _options; 
+        rocksdb::Options _options;
         MessageQueue<Command> _command_queue;
         ServiceState *currentState;
         Command command_to_process;
         std::condition_variable cv; //Gate keeper for the listen state
         std::mutex cv_m; // LOCK for waiting for the listen state
-                
+
     private:
         void init();
 };

@@ -1,5 +1,7 @@
 #include <iostream>
+#include <filesystem>
 
+#include "Config.h"
 #include "Service.h"
 #include "ConcreteServiceState.h"
 
@@ -22,9 +24,12 @@ void Service::process() {
 }
 
 void Service::init() {
-    //Init DB with options for account balances  
+    static Config config;
+
+    //Init DB with options for account balances
     _options.create_if_missing = true;
     //options.error_if_exists = true; // DEBUG
-    _status = rocksdb::DB::Open(_options, "/tmp/testdb", &_accountDB);
-    assert(_status.ok());
+    std::filesystem::create_directories(std::filesystem::path(config.db_path).parent_path());
+    _status = rocksdb::DB::Open(_options, config.db_path, &_accountDB);
+    if (!_status.ok()) throw std::runtime_error("Failed to open database: " + _status.ToString());
 }

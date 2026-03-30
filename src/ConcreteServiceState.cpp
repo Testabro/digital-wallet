@@ -3,8 +3,11 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
+#include "Config.h"
 #include "ConcreteServiceState.h"
 #include "MessageQueue.h"
+
+static Config config;
 
 std::string ServiceListen::getStateName() {
     return "LISTEN";
@@ -41,22 +44,20 @@ void ServiceValidate::process(Service* service) {
 
     //VALIDATE A TRANSFER COMMAND
     service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount2(), &balance);
-    if (!service->_status.ok()) { 
+    if (!service->_status.ok()) {
         std::cout << "Account not found" << std::endl;
         service->setState(ServiceListen::getInstance());
-        return;        
+        return;
     }
-    assert(service->_status.ok());
 
     service->_status = service->_accountDB->Get(service->_read_options, service->command_to_process.getAccount1(), &balance);
-    if (!service->_status.ok()) { 
+    if (!service->_status.ok()) {
         std::cout << "Account not found" << std::endl;
         service->setState(ServiceListen::getInstance());
-        return;        
+        return;
     }
-    assert(service->_status.ok());
 
-    if (std::stoi(balance) <= std::stoi(service->command_to_process.getAmount())) {
+    if (std::stoi(balance) < std::stoi(service->command_to_process.getAmount())) {
         std::cerr << "Balance too low" << std::endl;
         service->setState(ServiceListen::getInstance());
         return;
@@ -69,7 +70,7 @@ void ServiceValidate::process(Service* service) {
         return;
     }
 
-    service->setState(ServiceListen::getInstance()); 
+    service->setState(ServiceListen::getInstance());
 }
 
 ServiceState& ServiceValidate::getInstance() {
@@ -97,25 +98,41 @@ void ServiceApply::process(Service* service) {
     //Update State
     std::string balance;
     service->_status = service->_accountDB->Get(service->_read_options, eventA.account, &balance);
-    assert(service->_status.ok());    
+    if (!service->_status.ok()) {
+        std::cerr << "DB error: " << service->_status.ToString() << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;
+    }
     int accountBalanceA = std::stoi(balance);
 
     service->_status = service->_accountDB->Get(service->_read_options, eventB.account, &balance);
-    assert(service->_status.ok());    
+    if (!service->_status.ok()) {
+        std::cerr << "DB error: " << service->_status.ToString() << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;
+    }
     int accountBalanceB = std::stoi(balance);
 
     int balance1 = accountBalanceA - std::stoi(service->command_to_process.getAmount());
     int balance2 = accountBalanceB + std::stoi(service->command_to_process.getAmount());
 
     service->_status = service->_accountDB->Put(rocksdb::WriteOptions(), eventA.account, std::to_string(balance1));
-    assert(service->_status.ok());
+    if (!service->_status.ok()) {
+        std::cerr << "DB error: " << service->_status.ToString() << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;
+    }
 
     service->_status = service->_accountDB->Put(rocksdb::WriteOptions(), eventB.account, std::to_string(balance2));
-    assert(service->_status.ok());
+    if (!service->_status.ok()) {
+        std::cerr << "DB error: " << service->_status.ToString() << std::endl;
+        service->setState(ServiceListen::getInstance());
+        return;
+    }
 
     //Add to event log
     {
-        std::ofstream ofs("/tmp/event-log.txt");
+        std::ofstream ofs(config.event_log, std::ios::app);
         boost::archive::text_oarchive oa(ofs);
         oa << eventA << eventB;
     }

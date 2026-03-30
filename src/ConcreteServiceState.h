@@ -6,47 +6,47 @@
 class ServiceListen: public ServiceState
 {
 public:
-	void process(Service* Service) {}
-	void toggle(Service* Service);
-	void onEnter(Service* Service);
+	void process(Service* service) {}
+	void toggle(Service* service);
+	void onEnter(Service* service);
 	std::string getStateName();
 	static ServiceState& getInstance();
 
 private:
 	ServiceListen() {}
 	~ServiceListen() {}
-	ServiceListen(const ServiceListen& other);
-	ServiceListen& operator=(const ServiceListen& other);
+	ServiceListen(const ServiceListen&) = delete;
+	ServiceListen& operator=(const ServiceListen&) = delete;
 };
 
 class ServiceValidate: public ServiceState
 {
 public:
-	void process(Service* Service);
-	void toggle(Service* Service) {}
-	void onEnter(Service* Service) {}
+	void process(Service* service);
+	void toggle(Service* service) {}
+	void onEnter(Service* service) {}
 	std::string getStateName();
 	static ServiceState& getInstance();
 
 private:
 	ServiceValidate() {}
 	~ServiceValidate() {}
-	ServiceValidate(const ServiceValidate& other);
-	ServiceValidate& operator=(const ServiceValidate& other);
+	ServiceValidate(const ServiceValidate&) = delete;
+	ServiceValidate& operator=(const ServiceValidate&) = delete;
 };
 
 class ServiceApply: public ServiceState
 {
 public:
-	void toggle(Service* Service) {}
-	void process(Service* Service);
-	void onEnter(Service* Service) {}
+	void toggle(Service* service) {}
+	void process(Service* service);
+	void onEnter(Service* service) {}
 	std::string getStateName();
 	static ServiceState& getInstance();
 
 private:
 	ServiceApply() {}
 	~ServiceApply() {}
-	ServiceApply(const ServiceListen& other);
-	ServiceApply& operator=(const ServiceApply& other);
+	ServiceApply(const ServiceApply&) = delete;
+	ServiceApply& operator=(const ServiceApply&) = delete;
 };

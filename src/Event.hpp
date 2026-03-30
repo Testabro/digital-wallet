@@ -14,18 +14,18 @@ class Event {
         std::string parent_tx_id;
 
         Event(){};
-        friend std::ostream& operator<<(std::ostream& os, const Event event) {
+        friend std::ostream& operator<<(std::ostream& os, const Event& event) {
            return os << event.parent_tx_id << " " << event.account << " " << event.amount << " " << event.action;
         }
 
         void apply() {};
-        const std::string toString() {
+        const std::string toString() const {
             std::ostringstream os;
             os << "Transaction ID: " << parent_tx_id << " Action: " << action
-               << " Account: " << account << " Amount: " << amount << std::endl;        
+               << " Account: " << account << " Amount: " << amount << std::endl;
             return os.str();
         };
-        
+
     private:
         friend class boost::serialization::access;
         template<class Archive>
